@@ -15,7 +15,7 @@ function App() {
         <Switch>
           <Route exact={true} path='/' component={ChatPage} />
           <Route path='/chat' component={ChatPage} />
-          <Route path='/chat/settings' component={SettingsPage} />
+          <Route path='/chat/settings' render={props => <SettingsPage {...props} />} />
         </Switch>
       </React.Fragment>
     </HashRouter>

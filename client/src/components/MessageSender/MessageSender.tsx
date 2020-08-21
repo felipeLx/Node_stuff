@@ -8,7 +8,6 @@ import * as actions from '../../store/action';
 import StyledMessageSender from './StyledMessageSender';
 import { getTime12Hours, getTime24hours } from '../../utils/commons';
 import { readRecord } from '../../utils/localStorageService';
-import StyledMessage from '../Message/StyledMessage';
 
 interface IMessageSenderDispatchProps {
     sendMessage: (message: { from: string, content: string, time: string}) => void;
@@ -72,7 +71,7 @@ export class MessageSender extends React.Component {
         if(readRecord('ctrlEnterSending') !== 'On') {
             this.sendOnPressEnter();
         } else {
-            this.sendOnPressCtrl();
+            this.sendOnPressCtrlEnter();
         }
     };
 
@@ -84,6 +83,15 @@ export class MessageSender extends React.Component {
             return;
         }
     };
+
+    private sendOnPressCtrlEnter = () => {
+        if(KEY_CODES.CTRL in this.pressedKeysMap && KEY_CODES.ENTER in this.pressedKeysMap) {
+            this.sendChatMessage();
+            this.cleanMessageInput();
+        } else {
+            return;
+        }
+    }
 
     private handleOnChange = (event: React.FormEvent<HTMLInputElement>) => {
         this.setState({ chatMessage: event.currentTarget.value});
@@ -114,8 +122,8 @@ export class MessageSender extends React.Component {
     }
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): IMessageSenderDispatchProps => ({
-    sendMessage: (message: {from: string, content: string, time: string}) => dispatch(actions.sendMessage(message)),
+const mapDispatchToProps = (dispatch: Dispatch): IMessageSenderDispatchProps => ({
+    sendMessage: (message: {from: string, content: string, time: string}) => dispatch(actions.sendMessage(message))
 });
 
 export default connect(null, mapDispatchToProps)(MessageSender);
